@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport"content="initial-scale=1.0, user-scalable=no"/>
+        <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0 }
+            #map_canvas { height: 80%; width: 80% }
+        </style>
+        <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&sensor=false">
+        </script>
+        <script type="text/javascript">
+            var map;
+            function initialize() {
+                var mapOptions = {
+                    center: new google.maps.LatLng(58.4000, 15.6100),
+                    zoom: 12,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+
+                };
+                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+	        google.maps.event.addListener(map, 'click', function(event) {
+	            createMarker(map, event.latLng, "click: "+event.latLng);
+	        });
+          displayMarkers(map)
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+	    function createMarker(map, latlng, title) {
+	        var marker = new google.maps.Marker({
+	            map: map,
+	            position: latlng,
+	            title: title
+	        });
+	    }
+
+      function displayMarkers(map) {
+        {% for coord in COORDS %}
+          createMarker(map, new google.maps.LatLng({{coord.lat}},
+                                                 {{coord.lng}}),
+                                                 ""+{{coord.id}});
+        {% endfor %}
+      }
+        </script>
+    </head>
+    <body>
+        <div id="map_canvas"></div>
+    </body>
+</html>
+<!--<html>
+<body>
+
+<h1 style="font: calibri; color: blue; font-size: 20px; text-align: center;">{{HELLO}}</h1>
+
+</body>
+</html> -->
